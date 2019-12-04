@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sudoku Solver</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cyborg/bootstrap.min.css" rel="stylesheet" integrity="sha384-mtS696VnV9qeIoC8w/PrPoRzJ5gwydRVn0oQ9b+RJOPxE1Z1jXuuJcyeNxvNZhdx" crossorigin="anonymous">
+</head>
+<body>
+	<style type="text/css">
+		input {
+			width: 30px;
+			height: 30px;
+			font-size: 25px;
+			text-align: center;
+		}
+		table
+		{
+			border-color: #2A9FD6;
+		}
+	</style>
+	<script type="text/javascript">
+		function check(x)
+		{
+			var doom = x.value;
+			doom = parseInt(doom);
+			var letters = /^[1-9]/;
+		    if(x.value.match(letters) && x.value.length<2)
+		    return true;
+		    else
+		    {
+		    x.value="";
+		    return false;
+		    }
+		}
+
+		function done()
+		{
+			var grid = fill();
+			solve(grid);
+			// printBoard(grid);
+			refill(grid)
+		}
+
+		function fill()
+		{
+			var x = new Array(9);
+			for(let i=0;i<9;i++)
+			x[i] = [];
+			var toll = 0, i = 1;
+			while(i<=81)
+			{
+				if(document.getElementById(i).value>=1 && document.getElementById(i).value<=9)
+				x[toll].push(document.getElementById(i).value);
+			else
+				x[toll].push(0);
+				if(i%9==0 && toll<=8)
+				{
+					toll++;
+					x[toll]=[];
+				}
+				i++;
+			}
+			for(let i=0;i<9;i++)
+			console.log(x[i].join());
+		return x;
+		}
+
+		function printBoard(grid)
+		{
+		  for(let i=0; i<9; i++)
+		  {
+		    for(let j=0; j<9; j++)
+		    {
+		      console.log(grid[i][j]+" ");
+		      if((j+1)%3==0 && (j+1)<9 && j>0)
+		      console.log("| ");
+		      if(j==8)
+		      console.log("\n");
+		    }
+		    if((i+1)%3==0 && (i+1)<9 && i>0)
+		    console.log("---------------------");
+		  }
+		}
+
+function empty(grid)
+{
+		var cell = [];
+		for (let i = 0; i < 9; i++)
+			for (let j = 0; j < 9; j++)
+				if (grid[i][j] == 0) {
+					cell.push(i);
+					cell.push(j);
+          return cell;
+      }
+      return cell;
+}
+
+function isValid(grid, num, xa, ya)
+{
+  for(let i=0;i<9;i++)
+  if(grid[xa][i] == num && ya!=i)
+  return false;
+
+  for(let i=0;i<9;i++)
+  if(grid[i][ya] == num && xa!=i)
+  return false;
+
+  var xsq = Math.floor(ya/3);
+  var ysq = Math.floor(xa/3);
+  for(let i=ysq*3;i<(ysq*3)+3;i++)
+  for(let j=xsq*3;j<(xsq*3)+3;j++)
+  if(grid[i][j] == num && xa != i && ya != j)
+  return false;
+
+  return true;
+}
+
+function solve(grid)
+{
+  var next = empty(grid);
+  if(next.length==0)
+  {
+    return true;
+  }
+  var row = next[0];
+  var col = next[1];
+
+
+  for(let i = 1; i <= 9; i++) {
+			if (isValid(grid, i, row, col)) {
+				grid[row][col] = i;
+        // printBoard(grid);
+        // console.log("===========================================");
+				if (solve(grid)) {
+					return true;
+				}
+        // console.log("backtrack");
+				grid[row][col] = 0;
+			}
+		}
+    return false;
+}
+
+	function refill(grid)
+	{
+		var toll = 0, i = 1, j = 0;
+		while(i<82)
+		{
+			document.getElementById(i).value=grid[toll][j];
+			j++;
+			if(i%9==0)
+			{
+				j=0;
+				toll++;
+			}
+			i++;
+		}
+	}
+
+
+	</script>
+<center>
+	<br>
+	<br><br>
+	<h2><i class="fa fa-graduation-cap"></i>&nbsp;Sudoku Solver</h2>
+	<br><br>
+	<table border="5">
+		<tr>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="1" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="2" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="3" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="10" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="11" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="12" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="19" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="20" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="21" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="4" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="5" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="6" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="13" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="14" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="15" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="22" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="23" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="24" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="7" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="8" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="9" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="16" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="17" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="18" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="25" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="26" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="27" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="28" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="29" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="30" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="37" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="38" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="39" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="46" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="47" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="48" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="31" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="32" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="33" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="40" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="41" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="42" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="49" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="50" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="51" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="34" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="35" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="36" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="43" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="44" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="45" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="52" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="53" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="54" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="55" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="56" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="57" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="64" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="65" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="66" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="73" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="74" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="75" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="58" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="59" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="60" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="67" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="68" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="69" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="76" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="77" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="78" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table border="1" >
+					<tr>
+						<td><input type="text" name="" id="61" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="62" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="63" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="70" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="71" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="72" onkeyup="check(this);"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="" id="79" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="80" onkeyup="check(this);"></td>
+						<td><input type="text" name="" id="81" onkeyup="check(this);"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<br>
+	<button class="btn btn-outline-primary" onclick="done()">Solve</button>
+</center>
+</body>
+</html>
